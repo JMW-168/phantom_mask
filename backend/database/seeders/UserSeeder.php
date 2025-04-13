@@ -23,17 +23,16 @@ class UserSeeder extends Seeder
                 $user = User::create([
                     'name' => $userData['name'],
                     'email' => Str::slug($userData['name'], '.') . '@example.com',
-                    'password' => bcrypt('password'), // 預設密碼
+                    'password' => bcrypt('password'),
                     'cash_balance' => $userData['cashBalance'],
                 ]);
 
                 foreach ($userData['purchaseHistories'] as $history) {
-                    $pharmacy = Pharmacy::where('name', $history['pharmacyName'])->first();
-                    $mask = Mask::where('name', $history['maskName'])->first();
+                    $pharmacy = Pharmacy::where('name', trim($history['pharmacyName']))->first();
+                    $mask = Mask::where('name', trim($history['maskName']))->first();
 
                     if (!$pharmacy || !$mask) {
-                        // 可選：你也可以 log 或 throw
-                        continue;
+                        continue; // 可改 log::warning(...) 
                     }
 
                     Transaction::create([
@@ -41,7 +40,7 @@ class UserSeeder extends Seeder
                         'pharmacy_id' => $pharmacy->id,
                         'mask_id' => $mask->id,
                         'quantity' => 1,
-                        'unit_price' => $history['transactionAmount'], // 沒有單價就直接等於總價
+                        'unit_price' => $history['transactionAmount'],  // 假設 1 份就等於總價
                         'total_price' => $history['transactionAmount'],
                         'purchased_at' => Carbon::parse($history['transactionDate']),
                     ]);
@@ -50,4 +49,3 @@ class UserSeeder extends Seeder
         });
     }
 }
-
