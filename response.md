@@ -1,73 +1,80 @@
-# Response
-> The Current content is an **example template**; please edit it to fit your style and content.
-## A. Required Information
-### A.1. Requirement Completion Rate
-- [x] List all pharmacies open at a specific time and on a day of the week if requested.
-  - Implemented at xxx API.
-- [x] List all masks sold by a given pharmacy, sorted by mask name or price.
-  - Implemented at xxx API.
-- [x] List all pharmacies with more or less than x mask products within a price range.
-  - Implemented at xxx API.
-- [x] The top x users by total transaction amount of masks within a date range.
-  - Implemented at xxx API.
-- [x] The total number of masks and dollar value of transactions within a date range.
-  - Implemented at xxx API.
-- [x] Search for pharmacies or masks by name, ranked by relevance to the search term.
-  - Implemented at xxx API.
-- [x] Process a user purchases a mask from a pharmacy, and handle all relevant data changes in an atomic transaction.
-  - Implemented at xxx API.
-### A.2. API Document
-> Please describe how to use the API in the API documentation. You can edit by any format (e.g., Markdown or OpenAPI) or free tools (e.g., [hackMD](https://hackmd.io/), [postman](https://www.postman.com/), [google docs](https://docs.google.com/document/u/0/), or  [swagger](https://swagger.io/specification/)).
+# Phantom Mask API 文件
 
-Import [this](#api-document) json file to Postman.
+Phantom Mask 是一個以 Laravel 建構的 RESTful API 專案，用於模擬使用者向藥局購買口罩，並能查詢藥局口罩資訊、交易紀錄與排行。
 
-### A.3. Import Data Commands
-Please run these two script commands to migrate the data into the database.
+---
+
+## 🚀 快速啟動 Phantom Mask 專案（Docker 版）
+
+### ✅ 環境需求
+
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+
+---
+
+### 📦 一鍵啟動
+
+在專案根目錄執行：
 
 ```bash
-$ rake import_data:pharmacies[PATH_TO_FILE]
-$ rake import_data:users[PATH_TO_FILE]
+docker-compose up --build
 ```
-## B. Bonus Information
 
->  If you completed the bonus requirements, please fill in your task below.
-### B.1. Test Coverage Report
+這將會啟動以下服務：
 
-I wrote down the 20 unit tests for the APIs I built. Please check the test coverage report at [here](#test-coverage-report).
+| 服務 | 說明 | Port |
+|------|------|------|
+| Laravel API | 後端主服務 | `http://localhost:8000` |
+| MySQL | 資料庫服務 | `localhost:3306` |
+| PhpMyAdmin | MySQL 網頁管理介面 | `http://localhost:8081` |
 
-You can run the test script by using the command below:
+---
+
+### 🗃️ PhpMyAdmin 登入資訊
+
+- Host: `db`
+- 使用者：`laravel`
+- 密碼：`secret`
+
+---
+
+### 🔄 重設資料庫（選用）
+
+如果你要重建資料表並重新匯入 Seeder：
 
 ```bash
-bundle exec rspec spec
+docker exec -it laravel_app php artisan migrate:fresh --seed
 ```
 
-### B.2. Dockerized
-Please check my Dockerfile / docker-compose.yml at [here](#dockerized).
+---
 
-On the local machine, please follow the commands below to build it.
+### 🔍 測試 API 是否正常
 
-```bash
-$ docker build --build-arg ENV=development -p 80:3000 -t my-project:1.0.0 .  
-$ docker-compose up -d
+開啟 Postman 或瀏覽器測試：
 
-# go inside the container, run the migrate data command.
-$ docker exec -it my-project bash
-$ rake import_data:pharmacies[PATH_TO_FILE] 
-$ rake import_data:user[PATH_TO_FILE]
+```http
+GET http://localhost:8000/api/pharmacies/open?day=Mon&time=10:00
 ```
 
-### B.3. Demo Site Url
+應該會看到 JSON 回應代表服務啟動成功 ✅
 
-The demo site is ready on [my AWS demo site](#demo-site-url); you can try any APIs on this demo site.
+---
 
-## C. Other Information
+## 📘 API 文件
 
-### C.1. ERD
+> 若需詳細 API 參數與範例，請參考 [docs/api-spec.md](docs/api-spec.md)
 
-My ERD [erd-link](#erd-link).
+收錄功能包含：
 
-### C.2. Technical Document
+- 查詢營業中的藥局
+- 查詢藥局販售口罩（可排序）
+- 查詢藥局口罩數量條件 + 價格範圍
+- Top 使用者交易金額排行
+- 總交易金額與購買口罩數量統計
+- 搜尋口罩或藥局名稱（模糊）
+- 處理口罩購買（atomic transaction）
 
-For frontend programmer reading, please check this [technical document](technical-document) to know how to operate those APIs.
+---
 
-- --
+專案開發與部署中，如有任何問題歡迎提 issue 👋
