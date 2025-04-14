@@ -11,6 +11,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     && docker-php-ext-install pdo_mysql
 
+# 安裝 Xdebug
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+
 # 安裝 Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -18,9 +21,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 # ⬅️ 複製上層資料夾內容到容器中
-COPY ./backend ./
-
-COPY backend/.env.production .env
+COPY . .           
+COPY .env.production .env  
 
 # 安裝 Laravel 相依套件
 RUN composer install --no-dev --optimize-autoloader
