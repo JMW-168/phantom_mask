@@ -31,14 +31,59 @@ Phantom Mask 是一個基於 Laravel 開發的後端系統，提供藥局平台�
 
 ---
 
-## 🚀 專案啟動流程
+## 🚀 快速啟動 Phantom Mask 專案（Docker 版）
 
-### 📦 安裝 Laravel 專案（已於 `backend/` 建立）
+### ✅ 環境需求
+
+- [Docker](https://www.docker.com/)
+- [Docker Compose](https://docs.docker.com/compose/)
+
+---
+
+### 📦 一鍵啟動
+
+在專案根目錄執行：
 
 ```bash
-cd backend
-cp .env.example .env
-composer install
-php artisan key:generate
-
+docker-compose up --build
 ```
+
+這將會啟動以下服務：
+
+| 服務 | 說明 | Port |
+|------|------|------|
+| Laravel API | 後端主服務 | `http://localhost:8000` |
+| MySQL | 資料庫服務 | `localhost:3306` |
+| PhpMyAdmin | MySQL 網頁管理介面 | `http://localhost:8081` |
+
+---
+
+### 🗃️ PhpMyAdmin 登入資訊
+
+- Host: `db`
+- 使用者：`laravel`
+- 密碼：`secret`
+
+---
+
+### 🔄 重設資料庫（選用）
+
+如果你要重建資料表並重新匯入 Seeder：
+
+```bash
+docker exec -it laravel_app php artisan migrate:fresh --seed
+```
+
+---
+
+### 🔍 測試 API 是否正常
+
+開啟 Postman 或瀏覽器測試：
+
+```http
+GET http://localhost:8000/api/pharmacies/open?day=Mon&time=10:00
+```
+
+應該會看到 JSON 回應代表服務啟動成功 ✅
+
+---
