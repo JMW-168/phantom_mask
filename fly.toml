@@ -1,0 +1,28 @@
+app = "phantom-mask-cool-tree-6683"
+primary_region = "nrt"
+
+[build]
+dockerfile = "backend/Dockerfile"
+
+[env]
+APP_ENV = "production"
+APP_DEBUG = "false"
+APP_URL = "https://phantom-mask-cool-tree-6683.fly.dev"
+DB_CONNECTION = "mysql"
+
+
+# 選用 session/caching 驅動
+SESSION_DRIVER = "file"
+CACHE_DRIVER = "file"
+
+[[services]]
+  internal_port = 8000
+  protocol = "tcp"
+
+  [[services.ports]]
+    handlers = ["http"]
+    port = 80
+
+  [[services.ports]]
+    handlers = ["tls", "http"]
+    port = 443
