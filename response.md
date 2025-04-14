@@ -1,80 +1,102 @@
-# Phantom Mask API 文件
+# 成果展示文件
 
-Phantom Mask 是一個以 Laravel 建構的 RESTful API 專案，用於模擬使用者向藥局購買口罩，並能查詢藥局口罩資訊、交易紀錄與排行。
+> 本內容為 Phantom Mask 專案的最終成果展示。
 
----
+## A. 必填資訊
 
-## 🚀 快速啟動 Phantom Mask 專案（Docker 版）
+### A.1. 功能完成度
 
-### ✅ 環境需求
+- [v] **查詢特定時間與星期幾有營業的藥局清單**  
+  - 已實作於 `/api/pharmacies/open`
 
-- [Docker](https://www.docker.com/)
-- [Docker Compose](https://docs.docker.com/compose/)
+- [v] **查詢指定藥局販售的口罩清單，可依口罩名稱或價格排序**  
+  - 已實作於 `/api/pharmacies/{id}/masks`
 
----
+- [v] **查詢販售口罩數量多於或少於 x 的藥局，並支援價格範圍過濾**  
+  - 已實作於 `/api/pharmacies/filter`
 
-### 📦 一鍵啟動
+- [v] **查詢特定日期區間內口罩交易總金額前 x 名使用者**  
+  - 已實作於 `/api/users/top`
 
-在專案根目錄執行：
+- [v] **查詢特定日期區間內口罩交易總數量與總金額**  
+  - 已實作於 `/api/transactions/summary`
+
+- [v] **支援模糊搜尋藥局名稱或口罩名稱，依關聯性排序**  
+  - 已實作於 `/api/search?q=xxx`
+
+- [v] **使用者購買藥局的口罩，並以 Laravel Transaction 確保資料一致性**  
+  - 已實作於 `/api/purchase`
+
+## A.2. API 文件
+
+請參考以下連結以了解完整 API 文件：
+
+👉 [API 文件連結](https://github.com/JMW-168/phantom_mask/blob/main/API%20Spec.md)
+
+> 文件內容包含：
+> - 各 API 功能說明
+> - 請求與回應格式
+> - 範例參數與回傳資料
+
+
+### A.3. 匯入資料指令
+
+請執行下列 Laravel 指令匯入資料：
 
 ```bash
-docker-compose up --build
+php artisan migrate:fresh --seed
 ```
 
-這將會啟動以下服務：
-
-| 服務 | 說明 | Port |
-|------|------|------|
-| Laravel API | 後端主服務 | `http://localhost:8000` |
-| MySQL | 資料庫服務 | `localhost:3306` |
-| PhpMyAdmin | MySQL 網頁管理介面 | `http://localhost:8081` |
-
----
-
-### 🗃️ PhpMyAdmin 登入資訊
-
-- Host: `db`
-- 使用者：`laravel`
-- 密碼：`secret`
-
----
-
-### 🔄 重設資料庫（選用）
-
-如果你要重建資料表並重新匯入 Seeder：
+或依照資料格式個別執行：
 
 ```bash
-docker exec -it laravel_app php artisan migrate:fresh --seed
+php artisan db:seed --class=PharmacySeeder
+php artisan db:seed --class=UserSeeder
 ```
 
 ---
 
-### 🔍 測試 API 是否正常
+## B. Bonus 額外資訊
 
-開啟 Postman 或瀏覽器測試：
+### B.1. 測試覆蓋率報告（Test Coverage Report）
 
-```http
-GET http://localhost:8000/api/pharmacies/open?day=Mon&time=10:00
+已撰寫各 API 的單元測試，使用 Laravel 的 `php artisan test`。
+目前尚未產出 coverage report，可後續補充：
+
+執行指令如下：
+
+```bash
+php artisan test --coverage
 ```
 
-應該會看到 JSON 回應代表服務啟動成功 ✅
+或
+
+```bash
+vendor/bin/phpunit --coverage-html coverage
+```
+
+### B.2. Docker 化
+
+請參考 `backend/Dockerfile` 與 `docker-compose.yml`。
+本機啟動流程如下：
+
+```bash
+docker-compose up --build -d
+```
+
+並進入容器執行遷移與資料種子：
+
+```bash
+docker exec -it laravel_app bash
+php artisan migrate --seed
+```
+
+### B.3. Demo 線上網址
+
+Fly.io 上線網址：
+
+🔗 https://phantom-mask-cool-tree-6683.fly.dev/api/pharmacies/open?day=Tue&time=14:00
 
 ---
 
-## 📘 API 文件
 
-> 若需詳細 API 參數與範例，請參考 [docs/api-spec.md](docs/api-spec.md)
-
-收錄功能包含：
-
-- 查詢營業中的藥局
-- 查詢藥局販售口罩（可排序）
-- 查詢藥局口罩數量條件 + 價格範圍
-- Top 使用者交易金額排行
-- 總交易金額與購買口罩數量統計
-- 搜尋口罩或藥局名稱（模糊）
-- 處理口罩購買（atomic transaction）
-
----
-
-專案開發與部署中，如有任何問題歡迎提 issue 👋
