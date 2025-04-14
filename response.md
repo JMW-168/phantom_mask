@@ -60,20 +60,15 @@ php artisan db:seed --class=UserSeeder
 
 ### B.1. 測試覆蓋率報告（Test Coverage Report）
 
-已撰寫各 API 的單元測試，使用 Laravel 的 `php artisan test`。
-目前尚未產出 coverage report，可後續補充：
+已撰寫各 API 的單元測試，並成功產出 coverage report。  
+使用 Laravel 的 `phpunit` 指令，並以 HTML 格式輸出測試覆蓋率報告至 `/coverage` 目錄。
 
 執行指令如下：
 
 ```bash
-php artisan test --coverage
-```
-
-或
-
-```bash
 vendor/bin/phpunit --coverage-html coverage
 ```
+報告已產出，可於專案根目錄下的 coverage/index.html 開啟查看。
 
 ### B.2. Docker 化
 
